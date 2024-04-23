@@ -1,0 +1,69 @@
+
+body {
+    background-color: #2e2e2e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.titleclass{
+    font-size: 45px;
+    margin-bottom: 20px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    text-shadow: 2px 2px 10px #7e7e7e;
+    text-align: center;
+}
+.wordbuttons {
+    height: 70px;
+    width: 70px;
+    display: inline-block;
+    padding: 10px 15px;
+    font-size: 45px;
+    cursor: pointer;
+    text-align: center;
+    font-weight: 700;
+    color: #fff;
+    background-color: #b6b8b7;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 7px #8d8d8d;
+    margin-top: 7px;
+    margin-bottom: 7px;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+.wordbuttons:hover {
+    background-color: #adadad;
+    box-shadow: #888888;
+}
+
+.wordbuttons:active {
+    box-shadow: 0 4px #666;
+    transform: translateY(3px);
+}
+
+.bg {
+    border: 2px;
+    background-color: rgb(250, 250, 250);
+    padding: 50px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 30px;
+    box-shadow: 0 5px 20px #888888;
+    
+}
+.credits{
+    font-size: 15px;
+    margin-top: 40px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    text-shadow: 2px 2px 10px #7e7e7e;
+    text-align: center;
+}
+a:link {color: #777777;}
+a:visited {color: #494949;}
+a:hover {color: #acacac;}
