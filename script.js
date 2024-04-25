@@ -18,3 +18,30 @@ buttons.forEach(button => {
         }
   });
 });
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const inputGroups = document.querySelectorAll('.input-group');
+    
+    inputGroups.forEach(inputGroup => {
+      const inputs = inputGroup.querySelectorAll('input');
+      
+      inputs.forEach((input, index) => {
+        input.addEventListener('input', function() {
+          if (this.value.length === 1) {
+            if (index < inputs.length - 1) {
+              inputs[index + 1].focus();
+            }
+          }
+        });
+        
+        input.addEventListener('keydown', function(event) {
+          if (event.key === 'Backspace' && this.value.length === 0) {
+            if (index > 0) {
+              inputs[index - 1].focus();
+            }
+          }
+        });
+      });
+    });
+  });
