@@ -14,44 +14,43 @@ buttons.forEach(button => {
         } else {
             button.classList.add('gray');
         }
-  });
+    });
 });
 var currentline = 0;
 var searchbuttons = document.querySelectorAll('.searchbutton');
 searchbuttons.forEach(button => {
-  button.addEventListener('click', () => {
-    NextLine();
-});
+    button.addEventListener('click', () => {
+        NextLine();
+    });
 });
 //write in words
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const inputGroups = document.querySelectorAll('.input-group');
-    
-    inputGroups.forEach(inputGroup => {
-      const inputs = inputGroup.querySelectorAll('input');
-      
-      inputs.forEach((input, index) => {
-        input.addEventListener('input', function() {
-          if (this.value.length === 1) {
-            if (index < inputs.length - 1) {
-              inputs[index + 1].focus();
-            }
-          }
-        });
-        
-        input.addEventListener('keydown', function(event) {
-          if (event.key === 'Backspace' && this.value.length === 0) {
-            if (index > 0) {
-              inputs[index - 1].focus();
-            }
-          }
-        });
-      });
-    });
-  });
-import { words as wordsString } from './words/wordslist.js';
 
-let words = wordsString.split(',');
+    inputGroups.forEach(inputGroup => {
+        const inputs = inputGroup.querySelectorAll('input');
+
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', function () {
+                if (this.value.length === 1) {
+                    if (index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+                }
+            });
+
+            input.addEventListener('keydown', function (event) {
+                if (event.key === 'Backspace' && this.value.length === 0) {
+                    if (index > 0) {
+                        inputs[index - 1].focus();
+                    }
+                }
+            });
+        });
+    });
+});
+
+words = words.split(',');
 
 var toplaySolver = window.location.pathname.includes('solver.html');
 
@@ -60,38 +59,38 @@ let resetButton = document.querySelector('.resetbutton');
 startNewGame();
 
 resetButton.addEventListener('click', () => {
-  startNewGame();
+    startNewGame();
 });
 
 function startNewGame() {
-  //solver
-  if (toplaySolver) {
-    currentline = 0;
-    resetButton.value = "Reset";
-    NextLine();
-    for (var i = 0; i < buttons.length; i++) {
-      buttons[i].value = "";
-      buttons[i].classList.remove("yellow");
-      buttons[i].classList.remove("green");
-      buttons[i].classList.add("gray");
+    //solver
+    if (toplaySolver) {
+        currentline = 0;
+        resetButton.value = "Reset";
+        NextLine();
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].value = "";
+            buttons[i].classList.remove("yellow");
+            buttons[i].classList.remove("green");
+            buttons[i].classList.add("gray");
+        }
     }
-  }
-  //game
-  else {
-    var textinputs = document.querySelectorAll(".wordtextinput");
-    for (var i = 0; i < textinputs.length; i++) {
-      textinputs[i].value = "";
-      textinputs[i].classList.add("textgray");
+    //game
+    else {
+        var textinputs = document.querySelectorAll(".wordtextinput");
+        for (var i = 0; i < textinputs.length; i++) {
+            textinputs[i].value = "";
+            textinputs[i].classList.add("textgray");
+        }
+        resetButton.value = "Reset";
+        var word = words[Math.floor(Math.random() * words.length)];
+        console.log(word);
     }
-    resetButton.value = "Reset";
-    var word = words[Math.floor(Math.random() * words.length)];
-    console.log(word);
-  }
 }
 document.addEventListener("keyup", event => {
-  if (event.key == "Enter"){
-    GuessWord();
-  }
+    if (event.key == "Enter") {
+        GuessWord();
+    }
 });
 
 function GuessWord() {
@@ -99,20 +98,20 @@ function GuessWord() {
 };
 
 function NextLine() {
-  currentline++;
-  if(toplaySolver) {
-    for (var i = 0; i < 30; i++) {
-      buttons[i].disabled = false;
+    currentline++;
+    if (toplaySolver) {
+        for (var i = 0; i < 30; i++) {
+            buttons[i].disabled = false;
+        }
+        for (var i = 29; i >= (currentline * 5); i--) {
+            buttons[i].disabled = true;
+        }
+        for (var i = 0; i < 5; i++) {
+            searchbuttons[i].hidden = true;
+        }
+        searchbuttons[currentline - 1].hidden = false;
     }
-    for (var i = 29; i >= (currentline*5); i--) {
-      buttons[i].disabled = true;
-    }
-    for (var i = 0; i < 5; i++) {
-      searchbuttons[i].hidden = true;
-    }
-    searchbuttons[currentline-1].hidden = false;
-  }
-  else {
+    else {
 
-  }
+    }
 };
