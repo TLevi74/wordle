@@ -33,6 +33,17 @@ body {
     margin-left: 2px;
     margin-right: 2px;
 }
+.wordbuttons:disabled{
+    box-shadow: none;
+}
+.wordbuttons:disabled:empty{
+    background-color: #363636;
+    box-shadow: none;
+}
+.wordbuttons:disabled:active{
+    transform: none;
+    box-shadow: none;
+}
 .bg {
     border: 2px;
     background-color: rgb(250, 250, 250);
@@ -68,14 +79,6 @@ a:hover {color: #acacac;}
 .gray:active{
     box-shadow: 0 4px #666;
     transform: translateY(3px);
-}
-.gray:disabled{
-    background-color: #363636;
-    box-shadow: none;
-    cursor: not-allowed;
-}
-.gray:disabled:active{
-    transform: none;
 }
 .yellow{
     background-color: #f7cd0f;
@@ -116,6 +119,11 @@ a:hover {color: #acacac;}
 }
 .wordtextinput:focus{
     outline-color: rgb(109, 109, 109);
+}
+.wordtextinput:disabled:empty{
+    background-color: #363636;
+    border-radius: 10px;
+    box-shadow: none;
 }
 .textgray{
     background-color: #b6b8b7;

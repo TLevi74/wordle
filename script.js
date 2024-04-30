@@ -1,3 +1,4 @@
+var textinputs = document.querySelectorAll(".wordtextinput");
 //button color change
 var buttons = document.querySelectorAll(".wordbuttons");
 buttons.forEach(button => {
@@ -50,7 +51,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-words = words.split(',');
+words = words.split(', ');
+possibleanswers = words;
 
 var toplaySolver = window.location.pathname.includes('solver.html');
 
@@ -65,41 +67,8 @@ resetButton.addEventListener('click', () => {
 function startNewGame() {
     //solver
     if (toplaySolver) {
-        currentline = 0;
+        currentline = 1;
         resetButton.value = "Reset";
-        NextLine();
-        for (var i = 0; i < buttons.length; i++) {
-            buttons[i].value = "";
-            buttons[i].classList.remove("yellow");
-            buttons[i].classList.remove("green");
-            buttons[i].classList.add("gray");
-        }
-    }
-    //game
-    else {
-        var textinputs = document.querySelectorAll(".wordtextinput");
-        for (var i = 0; i < textinputs.length; i++) {
-            textinputs[i].value = "";
-            textinputs[i].classList.add("textgray");
-        }
-        resetButton.value = "Reset";
-        var word = words[Math.floor(Math.random() * words.length)];
-        console.log(word);
-    }
-}
-document.addEventListener("keyup", event => {
-    if (event.key == "Enter") {
-        GuessWord();
-    }
-});
-
-function GuessWord() {
-
-};
-
-function NextLine() {
-    currentline++;
-    if (toplaySolver) {
         for (var i = 0; i < 30; i++) {
             buttons[i].disabled = false;
         }
@@ -110,8 +79,79 @@ function NextLine() {
             searchbuttons[i].hidden = true;
         }
         searchbuttons[currentline - 1].hidden = false;
-    }
-    else {
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].value = "";
+            buttons[i].classList.remove("yellow");
+            buttons[i].classList.remove("green");
+            buttons[i].classList.add("gray");
+        }
 
     }
+    //game
+    else {
+        currentline = 1;
+        for (var i = 0; i < textinputs.length; i++) {
+            textinputs[i].value = "";
+            textinputs[i].classList.add("textgray");
+        }
+        resetButton.value = "Reset";
+        for (var i = 0; i < 30; i++) {
+            textinputs[i].disabled = false;
+        }
+        for (var i = 29; i >= (currentline * 5); i--) {
+            textinputs[i].disabled = true;
+        }
+        var word = words[Math.floor(Math.random() * words.length)];
+        console.log(word);
+    }
+}
+document.addEventListener("keyup", event => {
+    if (event.key == "Enter") {
+        NextLineGame();
+    }
+});
+
+function NextLineGame() {
+    if(!toplaySolver){
+        GuessWord = "";
+        for(var i = 0; i < 5; i++){
+            GuessWord += textinputs[5* (currentline - 1) + i].value.toLowerCase();
+        }
+        console.log(GuessWord);
+        if (words.includes(GuessWord)) {
+            currentline++;
+            for (var i = 0; i < 30; i++) {
+                textinputs[i].disabled = false;
+            }
+            for (var i = 0; i < (currentline * 5) - 5; i++) {
+                textinputs[i].disabled = true;
+            }
+            for (var i = 29; i >= (currentline * 5); i--) {
+                textinputs[i].disabled = true;
+            }
+            textinputs[5 * (currentline - 1)].focus();
+        }
+    }
+};
+
+var GuessWord = "";
+function NextLine() {
+    GuessWord = "";
+    for(var i = 0; i < 5; i++){
+        GuessWord += buttons[5* (currentline - 1) + i].textContent.toLowerCase();
+    }
+    currentline++;
+    for (var i = 0; i < 30; i++) {
+        buttons[i].disabled = false;
+    }
+    for (var i = 0; i < (currentline * 5) - 5; i++) {
+        buttons[i].disabled = true;
+    }
+    for (var i = 29; i >= (currentline * 5); i--) {
+        buttons[i].disabled = true;
+    }
+    for (var i = 0; i < 5; i++) {
+        searchbuttons[i].hidden = true;
+    }
+    searchbuttons[currentline - 1].hidden = false;
 };
