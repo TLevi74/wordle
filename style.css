@@ -120,9 +120,7 @@ a:hover {color: #acacac;}
 .wordtextinput:focus{
     outline-color: rgb(109, 109, 109);
 }
-.wordtextinput:disabled:empty{
-    background-color: #363636;
-    border-radius: 10px;
+.wordtextinput:disabled{
     box-shadow: none;
 }
 .textgray{
