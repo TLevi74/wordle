@@ -126,6 +126,14 @@ a:hover {color: #acacac;}
 .textgray{
     background-color: #b6b8b7;
 }
+.textyellow{
+    background-color: #f7cd0f;
+    border: 2px solid #a78e00;
+}
+.textgreen{
+    background-color: #00a108;
+    border: 2px solid #096800;
+}
 
 .resetbutton{
     height: 50px;
@@ -139,12 +147,12 @@ a:hover {color: #acacac;}
     border: none;
     border-radius: 15px;
     margin: 20px auto 0 auto;
-    background-color: #ffc831;
+    background-color: #ffbb00;
     box-shadow: 0 7px #c4a90d;
 }
 .resetbutton:hover{
-    background-color: #ebc800;
-    box-shadow: #ac9200;
+    background-color: #f3b200;
+    box-shadow: #967a00;
 }
 .resetbutton:active{
     box-shadow: 0 4px #b89000;
