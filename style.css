@@ -52,9 +52,18 @@ body {
     align-items: center;
     border-radius: 30px;
     box-shadow: 0 5px 20px #888888;
+    user-select: none;
 }
 .bg>div{
     white-space: nowrap;
+}
+.remainingcount{
+    font-size: 20px;
+    margin-top: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    text-shadow: 2px 2px 10px #7e7e7e;
+    text-align: center;
 }
 .credits{
     font-size: 15px;

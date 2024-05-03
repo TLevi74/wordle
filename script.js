@@ -53,10 +53,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
 possibleanswerswordslist = possibleanswerswordslist.split(',');
 onlyguesswordslist = onlyguesswordslist.split(',');
+let possibleSolutions = [...possibleanswerswordslist];
 
 var toplaySolver = window.location.pathname.includes('solver.html');
 
 let resetButton = document.querySelector('.resetbutton');
+let remainingCount = document.querySelector('.remainingcount');
 
 startNewGame();
 
@@ -69,7 +71,14 @@ function startNewGame() {
     //solver
     if (toplaySolver) {
         currentline = 1;
+        yellowcount = 0;
+        greencount = 0;
         resetButton.textContent = "Reset";
+        remainingCount.textContent = "";
+        possibleSolutions = [...possibleanswerswordslist];
+        for (var i = 5; i < 30; i++) {
+            buttons[i].textContent = "";
+        }
         for (var i = 0; i < 30; i++) {
             buttons[i].disabled = false;
         }
@@ -86,7 +95,6 @@ function startNewGame() {
             buttons[i].classList.remove("green");
             buttons[i].classList.add("gray");
         }
-
     }
     //game
     else {
@@ -106,7 +114,6 @@ function startNewGame() {
             textinputs[i].disabled = true;
         }
         word = possibleanswerswordslist[Math.floor(Math.random() * possibleanswerswordslist.length)];
-        console.log(word);
     }
 }
 document.addEventListener("keyup", event => {
@@ -174,6 +181,10 @@ function NextLineGame() {
 };
 
 var GuessWord = "";
+var yellowcount = 0;
+var greencount = 0;
+var guessnext = "";
+//solver game guessing next word
 function NextLine() {
     GuessWord = "";
     for(var i = 0; i < 5; i++){
@@ -192,5 +203,50 @@ function NextLine() {
     for (var i = 0; i < 5; i++) {
         searchbuttons[i].hidden = true;
     }
-    searchbuttons[currentline - 1].hidden = false;
+    if(currentline < 6){
+        searchbuttons[currentline - 1].hidden = false;
+    }
+    for(var i = 0; i < 5; i++){
+
+        yellowcount = 0;
+        graycount = 0;
+        let letter = buttons[5 * (currentline - 2) + i].textContent.toLowerCase();
+        for(var j = 0; j < 5; j++){
+            if(buttons[5 * (currentline - 2) + j].classList.contains("yellow") && buttons[5 * (currentline - 2) + j].textContent.toLowerCase() == letter){
+                yellowcount++;
+            }
+            if(buttons[5 * (currentline - 2) + j].classList.contains("green") && buttons[5 * (currentline - 2) + j].textContent.toLowerCase() == letter){
+                greencount++;
+            }
+        }
+
+        if(buttons[5 * (currentline - 2) + i].classList.contains("green")){
+            
+            possibleSolutions = possibleSolutions.filter(word => word[i] === letter);
+        }
+        if(buttons[5 * (currentline - 2) + i].classList.contains("yellow")){
+            possibleSolutions = possibleSolutions.filter(word => word.includes(letter) && word[i] !== letter);
+            possibleSolutions = possibleSolutions.filter(word => {
+                let count = word.split('').filter(l => l === letter).length;
+                return count === yellowcount + greencount;
+            });
+        }
+        if(buttons[5 * (currentline - 2) + i].classList.contains("gray")){ 
+            if(yellowcount == 0 && greencount == 0){
+                possibleSolutions = possibleSolutions.filter(word => !word.includes(letter));
+            }
+            else{
+                possibleSolutions = possibleSolutions.filter(word => {
+                    let count = word.split('').filter(l => l === letter).length;
+                    return count === yellowcount + greencount;
+                });
+                possibleSolutions = possibleSolutions.filter(word => word[i] !== letter);
+            }
+        }
+    }
+    remainingCount.textContent = possibleSolutions.length + " words left";
+    guessnext = possibleSolutions[Math.floor(Math.random() * possibleSolutions.length)];
+    for(var i = 0; i < 5; i++){
+        buttons[5 * (currentline - 1) + i].textContent = guessnext[i].toUpperCase();
+    }
 };
