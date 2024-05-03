@@ -24,7 +24,7 @@ searchbuttons.forEach(button => {
         NextLine();
     });
 });
-//write in words
+//type in words
 document.addEventListener('DOMContentLoaded', function () {
     const inputGroups = document.querySelectorAll('.input-group');
 
@@ -114,7 +114,7 @@ document.addEventListener("keyup", event => {
         NextLineGame();
     }
 });
-
+//a guess was made
 function NextLineGame() {
     if(!toplaySolver){
         GuessWord = "";
@@ -134,12 +134,24 @@ function NextLineGame() {
             }
             //change letter colors
             for (var i = 0; i < 5; i++) {
+                for(var j = 0; j < 5; j++){
+                    if(word[i] == GuessWord[j]){
+                        if(i == j){
+                            textinputs[5 * (currentline - 2) + j].classList.remove("textgray");
+                            textinputs[5 * (currentline - 2) + j].classList.add("textgreen");
+                            break;
+                        }else{
+                            if(textinputs[5 * (currentline - 2) + j].classList.contains("textgray")){
+                                textinputs[5 * (currentline - 2) + j].classList.remove("textgray");
+                            textinputs[5 * (currentline - 2) + j].classList.add("textyellow");
+                            break;
+                            }                    
+                        }
+                    }
+                }
                 if(word[i] == GuessWord[i]){
                     textinputs[5 * (currentline - 2) + i].classList.remove("textgray");
                     textinputs[5 * (currentline - 2) + i].classList.add("textgreen");
-                }else if(word.includes(GuessWord[i])){
-                    textinputs[5 * (currentline - 2) + i].classList.remove("textgray");
-                    textinputs[5 * (currentline - 2) + i].classList.add("textyellow");
                 }
             }
             if(word == GuessWord){
