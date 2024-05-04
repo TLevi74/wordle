@@ -73,6 +73,7 @@ function startNewGame() {
         currentline = 1;
         yellowcount = 0;
         greencount = 0;
+        graycount = 0;
         resetButton.textContent = "Reset";
         remainingCount.textContent = "";
         possibleSolutions = [...possibleanswerswordslist];
@@ -121,7 +122,7 @@ document.addEventListener("keyup", event => {
         NextLineGame();
     }
 });
-//a guess was made
+//a guess was made in the game
 function NextLineGame() {
     if(!toplaySolver){
         GuessWord = "";
@@ -183,70 +184,94 @@ function NextLineGame() {
 var GuessWord = "";
 var yellowcount = 0;
 var greencount = 0;
+var graycount = 0;
 var guessnext = "";
-//solver game guessing next word
+
+//solver guessing next word
 function NextLine() {
-    GuessWord = "";
-    for(var i = 0; i < 5; i++){
-        GuessWord += buttons[5* (currentline - 1) + i].textContent.toLowerCase();
+    //guessed the word, end of solve:
+    if(buttons[5 * (currentline - 1)].classList.contains("green") && buttons[5 * (currentline - 1) + 1].classList.contains("green") && buttons[5 * (currentline - 1) + 2].classList.contains("green") && buttons[5 * (currentline - 1) + 3].classList.contains("green") && buttons[5 * (currentline - 1) + 4].classList.contains("green")){
+        resetButton.textContent = "New Solve";
+        remainingCount.textContent = "";
+        searchbuttons[currentline - 1].hidden = true;
     }
-    currentline++;
-    for (var i = 0; i < 30; i++) {
-        buttons[i].disabled = false;
-    }
-    for (var i = 0; i < (currentline * 5) - 5; i++) {
-        buttons[i].disabled = true;
-    }
-    for (var i = 29; i >= (currentline * 5); i--) {
-        buttons[i].disabled = true;
-    }
-    for (var i = 0; i < 5; i++) {
-        searchbuttons[i].hidden = true;
-    }
-    if(currentline < 6){
-        searchbuttons[currentline - 1].hidden = false;
-    }
-    for(var i = 0; i < 5; i++){
+    //next guess:
+    else{
+        GuessWord = "";
+        for(var i = 0; i < 5; i++){
+            GuessWord += buttons[5* (currentline - 1) + i].textContent.toLowerCase();
+        }
+        currentline++;
+        for (var i = 0; i < 30; i++) {
+            buttons[i].disabled = false;
+        }
+        for (var i = 0; i < (currentline * 5) - 5; i++) {
+            buttons[i].disabled = true;
+        }
+        for (var i = 29; i >= (currentline * 5); i--) {
+            buttons[i].disabled = true;
+        }
+        for (var i = 0; i < 5; i++) {
+            searchbuttons[i].hidden = true;
+        }
+        if(currentline < 6){
+            searchbuttons[currentline - 1].hidden = false;
+        }
+        for(var i = 0; i < 5; i++){
 
-        yellowcount = 0;
-        graycount = 0;
-        let letter = buttons[5 * (currentline - 2) + i].textContent.toLowerCase();
-        for(var j = 0; j < 5; j++){
-            if(buttons[5 * (currentline - 2) + j].classList.contains("yellow") && buttons[5 * (currentline - 2) + j].textContent.toLowerCase() == letter){
-                yellowcount++;
+            yellowcount = 0;
+            greencount = 0;
+            graycount = 0;
+            let letter = buttons[5 * (currentline - 2) + i].textContent.toLowerCase();
+            //count colors of the letter
+            for(var j = 0; j < 5; j++){
+                if(buttons[5 * (currentline - 2) + j].classList.contains("yellow") && buttons[5 * (currentline - 2) + j].textContent.toLowerCase() == letter){
+                    yellowcount++;
+                }
+                if(buttons[5 * (currentline - 2) + j].classList.contains("green") && buttons[5 * (currentline - 2) + j].textContent.toLowerCase() == letter){
+                    greencount++;
+                }
+                if(buttons[5 * (currentline - 2) + j].classList.contains("gray") && buttons[5 * (currentline - 2) + j].textContent.toLowerCase() == letter){
+                    graycount++;
+                }
             }
-            if(buttons[5 * (currentline - 2) + j].classList.contains("green") && buttons[5 * (currentline - 2) + j].textContent.toLowerCase() == letter){
-                greencount++;
+            //filter possible solutions
+            if(buttons[5 * (currentline - 2) + i].classList.contains("green")){
+                
+                possibleSolutions = possibleSolutions.filter(word => word[i] === letter);
             }
-        }
 
-        if(buttons[5 * (currentline - 2) + i].classList.contains("green")){
-            
-            possibleSolutions = possibleSolutions.filter(word => word[i] === letter);
-        }
-        if(buttons[5 * (currentline - 2) + i].classList.contains("yellow")){
-            possibleSolutions = possibleSolutions.filter(word => word.includes(letter) && word[i] !== letter);
-            possibleSolutions = possibleSolutions.filter(word => {
-                let count = word.split('').filter(l => l === letter).length;
-                return count === yellowcount + greencount;
-            });
-        }
-        if(buttons[5 * (currentline - 2) + i].classList.contains("gray")){ 
-            if(yellowcount == 0 && greencount == 0){
-                possibleSolutions = possibleSolutions.filter(word => !word.includes(letter));
-            }
-            else{
+            if(buttons[5 * (currentline - 2) + i].classList.contains("yellow")){
+                possibleSolutions = possibleSolutions.filter(word => word.includes(letter) && word[i] !== letter);
                 possibleSolutions = possibleSolutions.filter(word => {
                     let count = word.split('').filter(l => l === letter).length;
-                    return count === yellowcount + greencount;
+                    if(graycount == 0){
+                        return count >= yellowcount + greencount;
+                    }else{
+                        return count === yellowcount + greencount;
+                    }
                 });
-                possibleSolutions = possibleSolutions.filter(word => word[i] !== letter);
+            }
+
+            if(buttons[5 * (currentline - 2) + i].classList.contains("gray")){ 
+                if(yellowcount == 0 && greencount == 0){
+                    possibleSolutions = possibleSolutions.filter(word => !word.includes(letter));
+                }
+                else{
+                    possibleSolutions = possibleSolutions.filter(word => {
+                        let count = word.split('').filter(l => l === letter).length;
+                        return count === yellowcount + greencount;
+                    });
+                    possibleSolutions = possibleSolutions.filter(word => word[i] !== letter);
+                }
             }
         }
-    }
-    remainingCount.textContent = possibleSolutions.length + " words left";
-    guessnext = possibleSolutions[Math.floor(Math.random() * possibleSolutions.length)];
-    for(var i = 0; i < 5; i++){
-        buttons[5 * (currentline - 1) + i].textContent = guessnext[i].toUpperCase();
+        //display remaining words
+        remainingCount.textContent = possibleSolutions.length + " words left";
+        guessnext = possibleSolutions[Math.floor(Math.random() * possibleSolutions.length)];
+        //display next guess
+        for(var i = 0; i < 5; i++){
+            buttons[5 * (currentline - 1) + i].textContent = guessnext[i].toUpperCase();
+        }
     }
 };
