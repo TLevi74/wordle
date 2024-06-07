@@ -115,6 +115,8 @@ function startNewGame() {
             textinputs[i].disabled = true;
         }
         word = possibleanswerswordslist[Math.floor(Math.random() * possibleanswerswordslist.length)];
+        //TEST:
+        //console.log(word);
     }
 }
 document.addEventListener("keyup", event => {
@@ -124,62 +126,54 @@ document.addEventListener("keyup", event => {
 });
 //a guess was made in the game
 function NextLineGame() {
-    if(!toplaySolver){
-        GuessWord = "";
-        for(var i = 0; i < 5; i++){
-            GuessWord += textinputs[5* (currentline - 1) + i].value.toLowerCase();
+    GuessWord = "";
+    for(var i = 0; i < 5; i++){
+        GuessWord += textinputs[5* (currentline - 1) + i].value.toLowerCase();
+    }
+    if (possibleanswerswordslist.includes(GuessWord) || onlyguesswordslist.includes(GuessWord)) {
+        currentline++;
+        for (var i = 0; i < 30; i++) {
+            textinputs[i].disabled = false;
         }
-        if (possibleanswerswordslist.includes(GuessWord) || onlyguesswordslist.includes(GuessWord)) {
-            currentline++;
-            for (var i = 0; i < 30; i++) {
-                textinputs[i].disabled = false;
-            }
-            for (var i = 0; i < (currentline * 5) - 5; i++) {
-                textinputs[i].disabled = true;
-            }
-            for (var i = 29; i >= (currentline * 5); i--) {
-                textinputs[i].disabled = true;
-            }
-            //change letter colors
-            for (var i = 0; i < 5; i++) {
+        for (var i = 0; i < (currentline * 5) - 5; i++) {
+            textinputs[i].disabled = true;
+        }
+        for (var i = 29; i >= (currentline * 5); i--) {
+            textinputs[i].disabled = true;
+        }
+        //change the color of the letters
+        for (var i = 0; i < 5; i++) {
+            if(GuessWord[i] == word[i]){
+                textinputs[5 * (currentline - 2) + i].classList.remove("textgray");
+                textinputs[5 * (currentline - 2) + i].classList.add("textgreen");
+            }else if(GuessWord.includes(word[i])){
+                //change the first gray letter to yellow in guessword that is the word[i]
                 for(var j = 0; j < 5; j++){
-                    if(word[i] == GuessWord[j]){
-                        if(i == j){
-                            textinputs[5 * (currentline - 2) + j].classList.remove("textgray");
-                            textinputs[5 * (currentline - 2) + j].classList.add("textgreen");
-                            break;
-                        }else{
-                            if(textinputs[5 * (currentline - 2) + j].classList.contains("textgray")){
-                                textinputs[5 * (currentline - 2) + j].classList.remove("textgray");
-                            textinputs[5 * (currentline - 2) + j].classList.add("textyellow");
-                            break;
-                            }                    
-                        }
+                    if(word[i] == GuessWord[j] && textinputs[5 * (currentline - 2) + j].classList.contains("textgray")){
+                        textinputs[5 * (currentline - 2) + j].classList.remove("textgray");
+                        textinputs[5 * (currentline - 2) + j].classList.add("textyellow");
+                        break;
                     }
                 }
-                if(word[i] == GuessWord[i]){
-                    textinputs[5 * (currentline - 2) + i].classList.remove("textgray");
-                    textinputs[5 * (currentline - 2) + i].classList.add("textgreen");
-                }
-            }
-            if(word == GuessWord){
-                for (var i = 0; i < 30; i++) {
-                    textinputs[i].disabled = true;
-                }
-                resetButton.textContent = "You Won!";
-            }else if(currentline == 7){
-                for (var i = 0; i < 30; i++) {
-                    textinputs[i].disabled = true;
-                }
-                resetButton.textContent = "The word was: " + word;
-
-            }
-            else{
-                textinputs[5 * (currentline - 1)].focus();
             }
         }
     }
-};
+    if(word == GuessWord){
+        for (var i = 0; i < 30; i++) {
+            textinputs[i].disabled = true;
+        }
+        resetButton.textContent = "You Won!";
+    }else if(currentline == 7){
+        for (var i = 0; i < 30; i++) {
+            textinputs[i].disabled = true;
+        }
+        resetButton.textContent = "The word was: " + word;
+
+    }
+    else{
+        textinputs[5 * (currentline - 1)].focus();
+    }
+}
 
 var GuessWord = "";
 var yellowcount = 0;
