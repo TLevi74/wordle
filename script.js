@@ -55,6 +55,16 @@ possibleanswerswordslist = possibleanswerswordslist.split(',');
 onlyguesswordslist = onlyguesswordslist.split(',');
 let possibleSolutions = [...possibleanswerswordslist];
 
+var lettersarray = "abcdefghijklmnopqrstuvwxyz".split(""); // [a,b,c,d,...]
+var matrix = [];
+for (var i = 0; i < lettersarray.length; i++) {
+    var row = [];
+    for (var j = 0; j < 5; j++) {
+        row.push(0);
+    }
+    matrix.push(row);
+}
+
 var toplaySolver = window.location.pathname.includes('solver.html');
 
 let resetButton = document.querySelector('.resetbutton');
@@ -70,6 +80,11 @@ var word;
 function startNewGame() {
     //solver
     if (toplaySolver) {
+        for (var i = 0; i < lettersarray.length; i++) {
+            for (var j = 0; j < 5; j++) {
+                matrix[i][j] = 0;
+            }
+        }
         currentline = 1;
         yellowcount = 0;
         greencount = 0;
@@ -195,6 +210,11 @@ function NextLine() {
         for(var i = 0; i < 5; i++){
             GuessWord += buttons[5* (currentline - 1) + i].textContent.toLowerCase();
         }
+        for (var i = 0; i < lettersarray.length; i++) {
+            for (var j = 0; j < 5; j++) {
+                matrix[i][j] = 0;
+            }
+        }
         currentline++;
         for (var i = 0; i < 30; i++) {
             buttons[i].disabled = false;
@@ -262,7 +282,35 @@ function NextLine() {
         }
         //display remaining words
         remainingCount.textContent = possibleSolutions.length + " words left";
-        guessnext = possibleSolutions[Math.floor(Math.random() * possibleSolutions.length)];
+        //-----------------------------------------------------------------------------------
+        //guessing algorithm:
+        //-----------------------------------------------------------------------------------
+        //count every letter's score by how many times it appears in the possible solutions
+        //also adding 1 to the score of the letter in the same position as the letter in the guess
+        for(0; i < possibleSolutions.length; i++){
+            for(var j = 0; j < 5; j++){
+                var index = lettersarray.indexOf(possibleSolutions[i][j]);
+                for(var k = 0; k < 5; k++){
+                    matrix[index][k] += 1;
+                }
+                matrix[index][j] += 2;
+            }
+        }
+        //find the word with the highest score
+        var max = 0;
+        var maxindex = 0;
+        for(var i = 0; i < possibleSolutions.length; i++){
+            var score = 0;
+            for(var j = 0; j < 5; j++){
+                score += matrix[lettersarray.indexOf(possibleSolutions[i][j])][j];
+            }
+            if(score > max){
+                max = score;
+                maxindex = i;
+            }
+        }
+        guessnext = possibleSolutions[maxindex];
+        //-----------------------------------------------------------------------------------
         //display next guess
         for(var i = 0; i < 5; i++){
             buttons[5 * (currentline - 1) + i].textContent = guessnext[i].toUpperCase();
